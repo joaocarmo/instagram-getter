@@ -14,6 +14,12 @@ new post.
 
 ### Changelog
 
+#### v0.2
+
+- Removed the close button,
+- Added a button to the top bar to show/hide the menu
+- Double click reloads the menu
+
 #### v0.1.1
 - Added a close button
 - Added logic to detect if the image is an avatar or a post picture

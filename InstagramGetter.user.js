@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Instagram Getter
-// @namespace    http://tampermonkey.net/
-// @version      0.1.1
+// @namespace    http://joaocarmo.com/
+// @version      0.2
 // @description  Instagram post page image getter
 // @source       https://github.com/joaocarmo/instagram-getter
 // @updateURL    https://raw.githubusercontent.com/joaocarmo/instagram-getter/master/InstagramGetter.meta.js
@@ -18,34 +18,52 @@
     var runAfter = 2000;
     var mainAppID = 'igetter-menu';
     var appTitle = 'Instagram Getter';
+    var menuButtonDisplay = 'IGetter';
     var loadingID = mainAppID + '-loading';
     var loadingText = 'Loading...';
     var menuText = 'Image {idx}';
+    var menuButtonStyle = {
+      width: '35px',
+      height: '35px',
+      position: 'fixed',
+      top: '22px',
+      right: '350px',
+      color: 'black',
+      backgroundColor: 'white',
+      display: 'table',
+      border: '1px solid lightgrey',
+      borderRadius: '20px',
+      cursor: 'pointer',
+      userSelect: 'none'
+    };
+    var menuButtonStyleHover = {
+      border: '1px solid darkgrey',
+    };
+    var menuButtonContentStyle = {
+      display: 'table-cell',
+      textAlign: 'center',
+      verticalAlign: 'middle',
+      fontFamily: 'sans-serif',
+      fontSize: '10px',
+      fontWeigth: 'bold'
+    };
     var menuStyle = {
       backgroundColor: 'white',
       width: '160px',
       position: 'fixed',
-      top: '120px',
-      left: '40px',
+      top: '80px',
+      right: '280px',
       padding: '10px',
       border: '1px solid lightgrey',
       borderRadius: '4px',
-      opacity: '0.7'
+      opacity: '1.0',
+      visibility: 'hidden'
     };
     var titleStyle = {
       fontWeigth: 'bold',
       padding: '5px',
       borderBottom: '1px solid lightgrey',
       marginBottom: '5px'
-    };
-    var closeStyle = {
-      position: 'absolute',
-      top: '5px',
-      right: '10px',
-      color: 'red',
-      cursor: 'pointer',
-      fontFamily: 'sans-serif',
-      fontSize: '12px'
     };
     var loadingStyle = {
       color: 'grey',
@@ -103,12 +121,7 @@
       return element;
     }
 
-    function closeMenu(event) {
-      var menu = document.getElementById(mainAppID);
-      menu.parentNode.removeChild(menu);
-    }
-
-    function showMenu() {
+    function createMenu() {
       // Create menu
       var newMenu = document.createElement('div');
       newMenu.id = mainAppID;
@@ -119,14 +132,6 @@
       menuTitle = applyStyle(menuTitle, titleStyle);
       var newTitleContent = document.createTextNode(appTitle);
       menuTitle.appendChild(newTitleContent);
-      // Create close button
-      var closeButton = document.createElement('span');
-      closeButton.id = mainAppID + '-close';
-      closeButton = applyStyle(closeButton, closeStyle);
-      closeButton.addEventListener('click', closeMenu);
-      var closeButtonContent = document.createTextNode('X');
-      closeButton.appendChild(closeButtonContent);
-      newMenu.appendChild(closeButton);
       // Create loader
       var menuLoading = document.createElement('div');
       menuLoading.id = loadingID;
@@ -174,6 +179,53 @@
       igMenu.appendChild(menuEntry);
     }
 
+    function createMenuButton() {
+      // Create menu button
+      var newMenuButton = document.createElement('div');
+      newMenuButton.id = mainAppID + '-button';
+      newMenuButton = applyStyle(newMenuButton, menuButtonStyle);
+      var menuButtonContent = document.createElement('div');
+      menuButtonContent.id = mainAppID + '-button-content';
+      menuButtonContent = applyStyle(menuButtonContent, menuButtonContentStyle);
+      var menuButtonContentText = document.createTextNode(menuButtonDisplay);
+      menuButtonContent.appendChild(menuButtonContentText);
+      newMenuButton.appendChild(menuButtonContent);
+      newMenuButton.addEventListener('click', showHideMenu);
+      newMenuButton.addEventListener('mouseenter', mouseHoverOn);
+      newMenuButton.addEventListener('mouseleave', mouseHoverOff);
+      newMenuButton.addEventListener('dblclick', reloadMenu);
+      // Append menu button
+      document.body.appendChild(newMenuButton);
+    }
+
+    function mouseHoverOn() {
+      var igMenuButton = document.getElementById(mainAppID + '-button');
+      igMenuButton = applyStyle(igMenuButton, menuButtonStyleHover);
+    }
+
+    function mouseHoverOff() {
+      var igMenuButton = document.getElementById(mainAppID + '-button');
+      igMenuButton = applyStyle(igMenuButton, menuButtonStyle);
+    }
+
+    function showHideMenu() {
+      var igMenu = document.getElementById(mainAppID);
+      var igStyle = window.getComputedStyle(igMenu);
+      var visibility = igStyle.getPropertyValue('visibility');
+      var newVisibility = 'visible';
+      if (visibility === newVisibility) {
+        newVisibility = 'hidden';
+      }
+      igMenu.style.visibility = newVisibility;
+    }
+
+    function destroyMenu() {
+      var menu = document.getElementById(mainAppID);
+      if (menu) {
+        menu.parentNode.removeChild(menu);
+      }
+    }
+
     // The main function to be called from another place
     function main() {
         var imgs = getSources(imgElements);
@@ -183,10 +235,21 @@
         srcs.forEach((src, idx) => addMenuEntry(src, idx, elements[idx]));
     }
 
+    function reload() {
+      // Build the menu
+      createMenu();
+      // Execute the code only after a certain time
+      setTimeout(main, runAfter);
+    }
+
+    function reloadMenu() {
+      destroyMenu();
+      reload();
+    }
+
     console.warn('The user script "Instagram Getter" is active !');
-    // Build the menu
-    showMenu();
-    // Execute the code only after a certain time
-    setTimeout(main, runAfter);
+    // Build the menu button
+    createMenuButton();
+    reload();
 
 })();

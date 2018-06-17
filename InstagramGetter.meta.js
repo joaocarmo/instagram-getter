@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Instagram Getter
-// @namespace    http://tampermonkey.net/
-// @version      0.1.1
+// @namespace    http://joaocarmo.com/
+// @version      0.2
 // @description  Instagram post page image getter
 // @source       https://github.com/joaocarmo/instagram-getter
 // @updateURL    https://raw.githubusercontent.com/joaocarmo/instagram-getter/master/InstagramGetter.meta.js
