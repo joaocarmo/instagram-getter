@@ -14,6 +14,10 @@ new post.
 
 ### Changelog
 
+#### v0.2.1
+
+- Added dynamically calculated position to the IGetter button
+
 #### v0.2
 
 - Removed the close button,

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Instagram Getter
 // @namespace    http://joaocarmo.com/
-// @version      0.2
+// @version      0.2.1
 // @description  Instagram post page image getter
 // @source       https://github.com/joaocarmo/instagram-getter
 // @updateURL    https://raw.githubusercontent.com/joaocarmo/instagram-getter/master/InstagramGetter.meta.js
@@ -27,7 +27,7 @@
       height: '35px',
       position: 'fixed',
       top: '22px',
-      right: '350px',
+      right: getButtonPosition() + 'px',
       color: 'black',
       backgroundColor: 'white',
       display: 'table',
@@ -52,7 +52,7 @@
       width: '160px',
       position: 'fixed',
       top: '80px',
-      right: '280px',
+      right: getMenuPosition() + 'px',
       padding: '10px',
       border: '1px solid lightgrey',
       borderRadius: '4px',
@@ -247,9 +247,31 @@
       reload();
     }
 
+    function getButtonPosition() {
+      var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+      return Math.ceil( width / 2 ) - 170;
+    }
+
+    function getMenuPosition() {
+      return getButtonPosition() - 70;
+    }
+
+    function setNewPositions() {
+      var buttonPosition = getButtonPosition();
+      var menuPosition = getMenuPosition();
+      var igMenuButton = document.getElementById(mainAppID + '-button');
+      var igMenu = document.getElementById(mainAppID);
+      igMenuButton.style.right = buttonPosition + 'px';
+      igMenu.style.right = menuPosition + 'px';
+    }
+
     console.warn('The user script "Instagram Getter" is active !');
     // Build the menu button
     createMenuButton();
     reload();
+    // Make sure the button is dynamically positioned
+    window.addEventListener('resize', function(event) {
+      setNewPositions();
+    });
 
 })();
