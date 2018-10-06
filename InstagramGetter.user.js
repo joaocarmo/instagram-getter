@@ -1,277 +1,283 @@
 // ==UserScript==
 // @name         Instagram Getter
 // @namespace    http://joaocarmo.com/
-// @version      0.2.1
+// @version      0.2.2
 // @description  Instagram post page image getter
 // @source       https://github.com/joaocarmo/instagram-getter
 // @updateURL    https://raw.githubusercontent.com/joaocarmo/instagram-getter/master/InstagramGetter.meta.js
 // @downloadURL  https://raw.githubusercontent.com/joaocarmo/instagram-getter/master/InstagramGetter.user.js
 // @author       joaocarmo
-// @match        https://www.instagram.com/p/*/
+// @match        https://www.instagram.com/p/*
 // @grant        none
+// @require      https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
 // @run-at       document-idle
 // ==/UserScript==
 
-(function() {
-    'use strict';
-    // Settings
-    var runAfter = 2000;
-    var mainAppID = 'igetter-menu';
-    var appTitle = 'Instagram Getter';
-    var menuButtonDisplay = 'IGetter';
-    var loadingID = mainAppID + '-loading';
-    var loadingText = 'Loading...';
-    var menuText = 'Image {idx}';
-    var menuButtonStyle = {
-      width: '35px',
-      height: '35px',
-      position: 'fixed',
-      top: '22px',
-      right: getButtonPosition() + 'px',
-      color: 'black',
-      backgroundColor: 'white',
-      display: 'table',
-      border: '1px solid lightgrey',
-      borderRadius: '20px',
-      cursor: 'pointer',
-      userSelect: 'none'
-    };
-    var menuButtonStyleHover = {
-      border: '1px solid darkgrey',
-    };
-    var menuButtonContentStyle = {
-      display: 'table-cell',
-      textAlign: 'center',
-      verticalAlign: 'middle',
-      fontFamily: 'sans-serif',
-      fontSize: '10px',
-      fontWeigth: 'bold'
-    };
-    var menuStyle = {
-      backgroundColor: 'white',
-      width: '160px',
-      position: 'fixed',
-      top: '80px',
-      right: getMenuPosition() + 'px',
-      padding: '10px',
-      border: '1px solid lightgrey',
-      borderRadius: '4px',
-      opacity: '1.0',
-      visibility: 'hidden'
-    };
-    var titleStyle = {
-      fontWeigth: 'bold',
-      padding: '5px',
-      borderBottom: '1px solid lightgrey',
-      marginBottom: '5px'
-    };
-    var loadingStyle = {
-      color: 'grey',
-      padding: '5px'
-    };
-    var entryStyle = {
-      padding: '5px'
-    };
+'use strict';
 
-    // Grab all img elements
-    var imgElements = document.getElementsByTagName('IMG');
+// Settings
+var preventModals = true;
+var runAfter = 2000;
+var mainAppID = 'igetter-menu';
+var appTitle = 'Instagram Getter';
+var menuButtonDisplay = 'IGetter';
+var loadingID = mainAppID + '-loading';
+var loadingText = 'Loading...';
+var menuText = 'Image {idx}';
+var menuButtonStyle = {
+  width: '35px',
+  height: '35px',
+  position: 'fixed',
+  top: '22px',
+  right: getButtonPosition() + 'px',
+  color: 'black',
+  backgroundColor: 'white',
+  display: 'table',
+  border: '1px solid lightgrey',
+  borderRadius: '20px',
+  cursor: 'pointer',
+  userSelect: 'none'
+};
+var menuButtonStyleHover = {
+  border: '1px solid darkgrey',
+};
+var menuButtonContentStyle = {
+  display: 'table-cell',
+  textAlign: 'center',
+  verticalAlign: 'middle',
+  fontFamily: 'sans-serif',
+  fontSize: '10px',
+  fontWeigth: 'bold'
+};
+var menuStyle = {
+  backgroundColor: 'white',
+  width: '160px',
+  position: 'fixed',
+  top: '80px',
+  right: getMenuPosition() + 'px',
+  padding: '10px',
+  border: '1px solid lightgrey',
+  borderRadius: '4px',
+  opacity: '1.0',
+  visibility: 'hidden'
+};
+var titleStyle = {
+  fontWeigth: 'bold',
+  padding: '5px',
+  borderBottom: '1px solid lightgrey',
+  marginBottom: '5px'
+};
+var loadingStyle = {
+  color: 'grey',
+  padding: '5px'
+};
+var entryStyle = {
+  padding: '5px'
+};
 
-    function getSources(elements) {
-        // Store the srcs
-        var srcs = [];
-        var elements = [];
-        // Loop through all the elements
-        for (var i=0, N=imgElements.length; i<N; i++) {
-            var imgElement = imgElements[i];
-            if (imgElement) {
-                if (imgElement.src) {
-                    srcs.push(imgElement.src);
-                } else if (imgElement.srcset) {
-                    srcs.push(imgElement.srcset);
-                } else if (imgElement.currentSrc) {
-                    srcs.push(imgElement.currentSrc);
-                } else {
+function getSources(imgElements) {
+    // Store the srcs
+    var srcs = [];
+    var elements = [];
+    // Loop through all the elements
+    for (var i=0, N=imgElements.length; i<N; i++) {
+        var imgElement = imgElements[i];
+        if (imgElement) {
+            if (imgElement.src) {
+                srcs.push(imgElement.src);
+            } else if (imgElement.srcset) {
+                srcs.push(imgElement.srcset);
+            } else if (imgElement.currentSrc) {
+                srcs.push(imgElement.currentSrc);
+            } else {
+                try {
+                    srcs.push(imgElement.attributes.ownerElement.src);
+                } catch(e) {
                     try {
-                        srcs.push(imgElement.attributes.ownerElement.src);
+                        srcs.push(imgElement.attributes.ownerElement.srcset);
                     } catch(e) {
                         try {
-                            srcs.push(imgElement.attributes.ownerElement.srcset);
+                            srcs.push(imgElement.attributes.ownerElement.currentSrc);
                         } catch(e) {
-                            try {
-                                srcs.push(imgElement.attributes.ownerElement.currentSrc);
-                            } catch(e) {
-                                console.log(imgElement);
-                            }
+                            console.log(imgElement);
                         }
                     }
                 }
             }
-            elements.push(imgElement);
         }
-        return {
-          srcs: srcs,
-          elements: elements
-        };
+        elements.push(imgElement);
     }
+    return {
+      srcs: srcs,
+      elements: elements
+    };
+}
 
-    function applyStyle(element, style) {
-      Object.keys(style).forEach(function(key) {
-        element.style[key] = style[key];
-      });
-      return element;
+function applyStyle(element, style) {
+  Object.keys(style).forEach(function(key) {
+    element.style[key] = style[key];
+  });
+  return element;
+}
+
+function createMenu() {
+  // Create menu
+  var newMenu = document.createElement('div');
+  newMenu.id = mainAppID;
+  newMenu = applyStyle(newMenu, menuStyle);
+  // Create menu title
+  var menuTitle = document.createElement('div');
+  menuTitle.id = mainAppID + '-title';
+  menuTitle = applyStyle(menuTitle, titleStyle);
+  var newTitleContent = document.createTextNode(appTitle);
+  menuTitle.appendChild(newTitleContent);
+  // Create loader
+  var menuLoading = document.createElement('div');
+  menuLoading.id = loadingID;
+  menuLoading = applyStyle(menuLoading, loadingStyle);
+  var menuLoadingContent = document.createTextNode(loadingText);
+  menuLoading.appendChild(menuLoadingContent);
+  newMenu.appendChild(menuTitle);
+  newMenu.appendChild(menuLoading);
+  // Append menu
+  document.body.appendChild(newMenu);
+}
+
+function hideLoading() {
+  var igMenuLoading = document.getElementById(loadingID);
+  igMenuLoading.parentNode.removeChild(igMenuLoading);
+}
+
+function getDescription(index, element) {
+  var description = menuText.replace('{idx}', index);
+  if (element && (element.height > 16 || element.width > 16)) {
+    if (element.width > 150 || element.width > 150) {
+      description = 'Post Image';
     }
-
-    function createMenu() {
-      // Create menu
-      var newMenu = document.createElement('div');
-      newMenu.id = mainAppID;
-      newMenu = applyStyle(newMenu, menuStyle);
-      // Create menu title
-      var menuTitle = document.createElement('div');
-      menuTitle.id = mainAppID + '-title';
-      menuTitle = applyStyle(menuTitle, titleStyle);
-      var newTitleContent = document.createTextNode(appTitle);
-      menuTitle.appendChild(newTitleContent);
-      // Create loader
-      var menuLoading = document.createElement('div');
-      menuLoading.id = loadingID;
-      menuLoading = applyStyle(menuLoading, loadingStyle);
-      var menuLoadingContent = document.createTextNode(loadingText);
-      menuLoading.appendChild(menuLoadingContent);
-      newMenu.appendChild(menuTitle);
-      newMenu.appendChild(menuLoading);
-      // Append menu
-      document.body.appendChild(newMenu);
+    if (element.width < 150 || element.width < 150) {
+      description = 'Avatar';
     }
+  }
+  return description;
+}
 
-    function hideLoading() {
-      var igMenuLoading = document.getElementById(loadingID);
-      igMenuLoading.parentNode.removeChild(igMenuLoading);
-    }
+function addMenuEntry(src, idx, element) {
+  var srcNum = idx + 1;
+  var igMenu = document.getElementById(mainAppID);
+  var menuEntry = document.createElement('div');
+  menuEntry.id = mainAppID + '-entry-' + srcNum;
+  menuEntry = applyStyle(menuEntry, entryStyle);
+  var menuEntryLink = document.createElement('a');
+  var description = getDescription(srcNum, element);
+  var menuEntryLinkContent = document.createTextNode(description);
+  menuEntryLink.href = src;
+  menuEntryLink.target = '_blank';
+  menuEntryLink.alt = '';
+  menuEntryLink.appendChild(menuEntryLinkContent);
+  menuEntry.appendChild(menuEntryLink);
+  igMenu.appendChild(menuEntry);
+}
 
-    function getDescription(index, element) {
-      var description = menuText.replace('{idx}', index);
-      if (element && (element.height > 16 || element.width > 16)) {
-        if (element.width > 150 || element.width > 150) {
-          description = 'Post Image';
-        }
-        if (element.width < 150 || element.width < 150) {
-          description = 'Avatar';
-        }
-      }
-      return description;
-    }
+function createMenuButton() {
+  // Create menu button
+  var newMenuButton = document.createElement('div');
+  newMenuButton.id = mainAppID + '-button';
+  newMenuButton = applyStyle(newMenuButton, menuButtonStyle);
+  var menuButtonContent = document.createElement('div');
+  menuButtonContent.id = mainAppID + '-button-content';
+  menuButtonContent = applyStyle(menuButtonContent, menuButtonContentStyle);
+  var menuButtonContentText = document.createTextNode(menuButtonDisplay);
+  menuButtonContent.appendChild(menuButtonContentText);
+  newMenuButton.appendChild(menuButtonContent);
+  newMenuButton.addEventListener('click', showHideMenu);
+  newMenuButton.addEventListener('mouseenter', mouseHoverOn);
+  newMenuButton.addEventListener('mouseleave', mouseHoverOff);
+  newMenuButton.addEventListener('dblclick', reloadMenu);
+  // Append menu button
+  document.body.appendChild(newMenuButton);
+}
 
-    function addMenuEntry(src, idx, element) {
-      var srcNum = idx + 1;
-      var igMenu = document.getElementById(mainAppID);
-      var menuEntry = document.createElement('div');
-      menuEntry.id = mainAppID + '-entry-' + srcNum;
-      menuEntry = applyStyle(menuEntry, entryStyle);
-      var menuEntryLink = document.createElement('a');
-      var description = getDescription(srcNum, element);
-      var menuEntryLinkContent = document.createTextNode(description);
-      menuEntryLink.href = src;
-      menuEntryLink.target = '_blank';
-      menuEntryLink.alt = '';
-      menuEntryLink.appendChild(menuEntryLinkContent);
-      menuEntry.appendChild(menuEntryLink);
-      igMenu.appendChild(menuEntry);
-    }
+function mouseHoverOn() {
+  var igMenuButton = document.getElementById(mainAppID + '-button');
+  igMenuButton = applyStyle(igMenuButton, menuButtonStyleHover);
+}
 
-    function createMenuButton() {
-      // Create menu button
-      var newMenuButton = document.createElement('div');
-      newMenuButton.id = mainAppID + '-button';
-      newMenuButton = applyStyle(newMenuButton, menuButtonStyle);
-      var menuButtonContent = document.createElement('div');
-      menuButtonContent.id = mainAppID + '-button-content';
-      menuButtonContent = applyStyle(menuButtonContent, menuButtonContentStyle);
-      var menuButtonContentText = document.createTextNode(menuButtonDisplay);
-      menuButtonContent.appendChild(menuButtonContentText);
-      newMenuButton.appendChild(menuButtonContent);
-      newMenuButton.addEventListener('click', showHideMenu);
-      newMenuButton.addEventListener('mouseenter', mouseHoverOn);
-      newMenuButton.addEventListener('mouseleave', mouseHoverOff);
-      newMenuButton.addEventListener('dblclick', reloadMenu);
-      // Append menu button
-      document.body.appendChild(newMenuButton);
-    }
+function mouseHoverOff() {
+  var igMenuButton = document.getElementById(mainAppID + '-button');
+  igMenuButton = applyStyle(igMenuButton, menuButtonStyle);
+}
 
-    function mouseHoverOn() {
-      var igMenuButton = document.getElementById(mainAppID + '-button');
-      igMenuButton = applyStyle(igMenuButton, menuButtonStyleHover);
-    }
+function showHideMenu() {
+  var igMenu = document.getElementById(mainAppID);
+  var igStyle = window.getComputedStyle(igMenu);
+  var visibility = igStyle.getPropertyValue('visibility');
+  var newVisibility = 'visible';
+  if (visibility === newVisibility) {
+    newVisibility = 'hidden';
+  }
+  igMenu.style.visibility = newVisibility;
+}
 
-    function mouseHoverOff() {
-      var igMenuButton = document.getElementById(mainAppID + '-button');
-      igMenuButton = applyStyle(igMenuButton, menuButtonStyle);
-    }
+function destroyMenu() {
+  var menu = document.getElementById(mainAppID);
+  if (menu) {
+    menu.parentNode.removeChild(menu);
+  }
+}
 
-    function showHideMenu() {
-      var igMenu = document.getElementById(mainAppID);
-      var igStyle = window.getComputedStyle(igMenu);
-      var visibility = igStyle.getPropertyValue('visibility');
-      var newVisibility = 'visible';
-      if (visibility === newVisibility) {
-        newVisibility = 'hidden';
-      }
-      igMenu.style.visibility = newVisibility;
-    }
+// The main function to be called from another place
+function main() {
+  var imgElements;
+  // Grab all img elements
+  if (typeof $ === 'function') {
+    imgElements = $('img');
+  } else {
+    imgElements = document.getElementsByTagName('IMG');
+  }
+  var imgs = getSources(imgElements);
+  var srcs = imgs.srcs;
+  var elements = imgs.elements;
+  hideLoading();
+  srcs.forEach((src, idx) => addMenuEntry(src, idx, elements[idx]));
+}
 
-    function destroyMenu() {
-      var menu = document.getElementById(mainAppID);
-      if (menu) {
-        menu.parentNode.removeChild(menu);
-      }
-    }
+function reload() {
+  // Build the menu
+  createMenu();
+  // Execute the code only after a certain time
+  setTimeout(main, runAfter);
+}
 
-    // The main function to be called from another place
-    function main() {
-        var imgs = getSources(imgElements);
-        var srcs = imgs.srcs;
-        var elements = imgs.elements;
-        hideLoading();
-        srcs.forEach((src, idx) => addMenuEntry(src, idx, elements[idx]));
-    }
+function reloadMenu() {
+  destroyMenu();
+  reload();
+}
 
-    function reload() {
-      // Build the menu
-      createMenu();
-      // Execute the code only after a certain time
-      setTimeout(main, runAfter);
-    }
+function getButtonPosition() {
+  var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+  return Math.ceil( width / 2 ) - 170;
+}
 
-    function reloadMenu() {
-      destroyMenu();
-      reload();
-    }
+function getMenuPosition() {
+  return getButtonPosition() - 70;
+}
 
-    function getButtonPosition() {
-      var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-      return Math.ceil( width / 2 ) - 170;
-    }
+function setNewPositions() {
+  var buttonPosition = getButtonPosition();
+  var menuPosition = getMenuPosition();
+  var igMenuButton = document.getElementById(mainAppID + '-button');
+  var igMenu = document.getElementById(mainAppID);
+  igMenuButton.style.right = buttonPosition + 'px';
+  igMenu.style.right = menuPosition + 'px';
+}
 
-    function getMenuPosition() {
-      return getButtonPosition() - 70;
-    }
-
-    function setNewPositions() {
-      var buttonPosition = getButtonPosition();
-      var menuPosition = getMenuPosition();
-      var igMenuButton = document.getElementById(mainAppID + '-button');
-      var igMenu = document.getElementById(mainAppID);
-      igMenuButton.style.right = buttonPosition + 'px';
-      igMenu.style.right = menuPosition + 'px';
-    }
-
-    console.warn('The user script "Instagram Getter" is active !');
-    // Build the menu button
-    createMenuButton();
-    reload();
-    // Make sure the button is dynamically positioned
-    window.addEventListener('resize', function(event) {
-      setNewPositions();
-    });
-
+(function() {
+  console.info('The userscript "Instagram Getter" is active !');
+  // Build the menu button
+  createMenuButton();
+  reload();
+  // Make sure the button is dynamically positioned
+  window.addEventListener('resize', function(event) {
+    setNewPositions();
+  });
 })();
