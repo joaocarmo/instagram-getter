@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Instagram Getter
 // @namespace    http://joaocarmo.com/
-// @version      0.2.2
+// @version      0.3.0
 // @description  Instagram post page image getter
 // @source       https://github.com/joaocarmo/instagram-getter
 // @updateURL    https://raw.githubusercontent.com/joaocarmo/instagram-getter/master/InstagramGetter.meta.js
@@ -14,6 +14,9 @@
 // ==/UserScript==
 
 'use strict';
+
+// Tweaks
+var removeIframes = true;
 
 // Settings
 var preventModals = true;
@@ -74,6 +77,19 @@ var loadingStyle = {
 var entryStyle = {
   padding: '5px'
 };
+var counter = {
+  avatar: 0,
+  image: 0,
+  video: 0,
+};
+
+function applyTweaks() {
+  if (typeof $ === 'function') {
+    if (removeIframes) {
+      var iFrames = $('iframe').remove();
+    }
+  }
+}
 
 function getSources(imgElements) {
     // Store the srcs
@@ -148,27 +164,33 @@ function hideLoading() {
   igMenuLoading.parentNode.removeChild(igMenuLoading);
 }
 
-function getDescription(index, element) {
+function getDescription(index, element, isVideo) {
+  if (isVideo) {
+    counter.video = counter.video + 1;
+    return 'Post Video ' + counter.video;
+  }
   var description = menuText.replace('{idx}', index);
   if (element && (element.height > 16 || element.width > 16)) {
     if (element.width > 150 || element.width > 150) {
-      description = 'Post Image';
+      counter.image = counter.image + 1;
+      description = 'Post Image ' + counter.image;
     }
     if (element.width < 150 || element.width < 150) {
+      counter.avatar = counter.avatar + 1;
       description = 'Avatar';
     }
   }
   return description;
 }
 
-function addMenuEntry(src, idx, element) {
+function addMenuEntry(src, idx, element, isVideo) {
   var srcNum = idx + 1;
   var igMenu = document.getElementById(mainAppID);
   var menuEntry = document.createElement('div');
   menuEntry.id = mainAppID + '-entry-' + srcNum;
   menuEntry = applyStyle(menuEntry, entryStyle);
   var menuEntryLink = document.createElement('a');
-  var description = getDescription(srcNum, element);
+  var description = getDescription(srcNum, element, isVideo);
   var menuEntryLinkContent = document.createTextNode(description);
   menuEntryLink.href = src;
   menuEntryLink.target = '_blank';
@@ -228,17 +250,30 @@ function destroyMenu() {
 // The main function to be called from another place
 function main() {
   var imgElements;
+  var videoElements;
   // Grab all img elements
   if (typeof $ === 'function') {
     imgElements = $('img');
   } else {
-    imgElements = document.getElementsByTagName('IMG');
+    imgElements = document.getElementsByTagName('img');
   }
+  // Grab all video elements
+  if (typeof $ === 'function') {
+    videoElements = $('video');
+  } else {
+    videoElements = document.getElementsByTagName('video');
+  }
+  // Do it for images
   var imgs = getSources(imgElements);
   var srcs = imgs.srcs;
   var elements = imgs.elements;
-  hideLoading();
   srcs.forEach((src, idx) => addMenuEntry(src, idx, elements[idx]));
+  // Do ir for videos
+  var vids = getSources(videoElements);
+  var vidsSrcs = vids.srcs;
+  var vidsElements = vids.elements;
+  vidsSrcs.forEach((src, idx) => addMenuEntry(src, idx, vidsElements[idx], true));
+  hideLoading();
 }
 
 function reload() {
@@ -276,6 +311,7 @@ function setNewPositions() {
   // Build the menu button
   createMenuButton();
   reload();
+  applyTweaks();
   // Make sure the button is dynamically positioned
   window.addEventListener('resize', function(event) {
     setNewPositions();

@@ -14,6 +14,15 @@ new post.
 
 ### Changelog
 
+#### v0.3.0
+
+- Added support for videos
+
+#### v0.2.2
+
+- Minor enhancements
+- Added _jQuery_
+
 #### v0.2.1
 
 - Added dynamically calculated position to the IGetter button
