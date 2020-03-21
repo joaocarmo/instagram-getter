@@ -1,0 +1,31 @@
+{
+  "name": "instagram-getter",
+  "version": "0.3.1",
+  "description": "Instagram post page image getter",
+  "main": "lib/index.js",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joaocarmo/instagram-getter.git"
+  },
+  "keywords": [
+    "instagram",
+    "ig",
+    "get",
+    "getter",
+    "userscript",
+    "tampermonkey",
+    "greasemonkey",
+    "browser",
+    "extension"
+  ],
+  "author": "Joao Carmo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/joaocarmo/instagram-getter/issues"
+  },
+  "homepage": "https://github.com/joaocarmo/instagram-getter#readme"
+}

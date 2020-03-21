@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Instagram Getter
 // @namespace    http://joaocarmo.com/
-// @version      0.3.0
+// @version      0.3.1
 // @description  Instagram post page image getter
 // @source       https://github.com/joaocarmo/instagram-getter
 // @updateURL    https://raw.githubusercontent.com/joaocarmo/instagram-getter/master/InstagramGetter.meta.js
@@ -82,6 +82,14 @@ var counter = {
   image: 0,
   video: 0,
 };
+
+function debugInfo(msg) {
+  var output = window.console.log;
+  if (window && window.console && typeof window.console.info === 'function') {
+    output = window.console.info;
+  }
+  output(msg);
+}
 
 function applyTweaks() {
   if (typeof $ === 'function') {
@@ -307,7 +315,7 @@ function setNewPositions() {
 }
 
 (function() {
-  console.info('The userscript "Instagram Getter" is active !');
+  debugInfo('The userscript "Instagram Getter" is active !');
   // Build the menu button
   createMenuButton();
   reload();
