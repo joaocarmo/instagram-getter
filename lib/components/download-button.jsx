@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { downloadImage } from '../utils'
 
 const StyledButton = styled.button`
-  position: fixed;
+  position: absolute;
   top: 10px;
   right: 10px;
   height: 36px;
