@@ -1,6 +1,9 @@
 # Mac files
 .DS_Store
 
+# Dist dir
+dist
+
 # npm modules
 node_modules
 
