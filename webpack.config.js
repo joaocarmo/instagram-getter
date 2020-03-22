@@ -56,9 +56,7 @@ module.exports = {
   plugins: [
     new webpack.EnvironmentPlugin(['NODE_ENV']),
     new webpack.ProgressPlugin(),
-    new Dotenv({
-      path: path.join(__dirname, `.env.${mode}`),
-    }),
+    new Dotenv(),
     new HtmlWebpackPlugin({
       title: publicName,
       meta: {
