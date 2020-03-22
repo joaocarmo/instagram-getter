@@ -3,12 +3,16 @@
   "publicName": "InstagramGetter",
   "version": "1.0.0",
   "description": "Instagram post page image getter",
-  "browser": "./InstagramGetter.user.js",
+  "browser": "./dist/InstagramGetter.user.js",
   "private": true,
   "scripts": {
-    "build": "NODE_ENV=production webpack --mode=production",
     "start": "NODE_ENV=development webpack-dev-server --mode=development --color",
-    "test": ">&2 echo \"ERROR: no test(s) specified\" && exit 1"
+    "test": ">&2 echo \"ERROR: no test(s) specified\" && exit 1",
+    "build-bundle": "NODE_ENV=production webpack --mode=production",
+    "build-meta": "./scripts/setup-meta.js",
+    "append-meta": "(cat ./dist/InstagramGetter.meta.js && cat ./dist/InstagramGetter.bundle.js) > ./dist/InstagramGetter.user.js",
+    "build": "npm run build-bundle && npm run build-meta && npm run append-meta",
+    "clean": "rm -rf ./dist"
   },
   "repository": {
     "type": "git",
@@ -45,6 +49,7 @@
     "@babel/preset-react": "^7.9.1",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
+    "copy-webpack-plugin": "^5.1.1",
     "core-js": "^3.6.4",
     "dotenv-webpack": "^1.7.0",
     "eslint": "^6.8.0",

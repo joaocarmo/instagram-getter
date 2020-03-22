@@ -23,5 +23,6 @@ module.exports = {
   ],
   rules: {
     semi: ['error', 'never'],
+    'no-restricted-syntax': ['error', 'never'],
   },
 };
