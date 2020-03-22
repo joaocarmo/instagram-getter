@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import InstagramGetter from './instagram-getter'
+import InstagramGetter from './components/instagram-getter'
 import { debugPrint, addLocationChangeCallback, awaitElement } from './utils'
 
 const main = async () => {

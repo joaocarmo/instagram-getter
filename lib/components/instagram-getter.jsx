@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import Logo from './img/plus-getter.svg'
+import Worker from './worker'
+import Logo from '../img/plus-getter.svg'
 
 const AppContainer = styled.div`
   z-index: 1000;
@@ -25,7 +26,7 @@ const InstagramGetter = () => (
     <AppLogoContainer>
       <Logo height={20} width={60} />
     </AppLogoContainer>
-
+    <Worker />
   </AppContainer>
 )
 

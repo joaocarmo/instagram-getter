@@ -42,6 +42,7 @@
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "srcset": "^2.0.1",
     "styled-components": "^5.0.1"
   },
   "devDependencies": {

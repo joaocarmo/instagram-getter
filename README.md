@@ -8,11 +8,6 @@ the Instagram web app.
 When installed, the script will render a menu on individual post pages that
 allows easy access to the source of the images displayed on the page.
 
-### Known issues
-
-The menu does not auto-update, so you need to refresh the page when you view a
-new post.
-
 ### Changelog
 
 #### v0.3.0
