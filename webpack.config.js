@@ -3,7 +3,6 @@ const webpack = require('webpack')
 const Dotenv = require('dotenv-webpack')
 const CopyPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const HtmlWebpackRootPlugin = require('html-webpack-root-plugin')
 const babelConfig = require('./babel.config')
 const packageConfig = require('./package')
 
@@ -57,13 +56,7 @@ module.exports = {
     new webpack.EnvironmentPlugin(['NODE_ENV']),
     new webpack.ProgressPlugin(),
     new Dotenv(),
-    new HtmlWebpackPlugin({
-      title: publicName,
-      meta: {
-        viewport: 'width=device-width, initial-scale=1, shrink-to-fit=no',
-      },
-    }),
-    new HtmlWebpackRootPlugin('app'),
+    new HtmlWebpackPlugin({ title: publicName }),
     new CopyPlugin([
       {
         from: path.join(srcDir, 'template.meta.js'),
