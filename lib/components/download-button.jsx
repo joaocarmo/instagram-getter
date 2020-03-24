@@ -20,7 +20,7 @@ const StyledButton = styled.button`
   cursor: pointer;
   user-select: none;
   white-space: nowrap;
-  z-index: 1000;
+  z-index: 3;
 
   &:hover {
     opacity: 1;
@@ -36,12 +36,11 @@ const StyledButton = styled.button`
   }
 `
 
-const DownloadButton = ({ imageData }) => {
+const DownloadButton = ({ imageData: { imageEl, bestSrc } }) => {
   const [parentEl, setParentEl] = useState(null)
   const [imageUrl, setImageUrl] = useState('')
 
   useEffect(() => {
-    const { imageEl, bestSrc } = imageData
     setParentEl(imageEl.parentElement)
     setImageUrl(bestSrc)
   }, [])
