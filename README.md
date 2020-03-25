@@ -1,4 +1,6 @@
-![Getter](https://raw.githubusercontent.com/joaocarmo/instagram-getter/refactor/lib/img/getter.svg?sanitize=true | width=456)
+<p align="center">
+	<img src="https://raw.githubusercontent.com/joaocarmo/instagram-getter/refactor/lib/img/getter.svg?sanitize=true" width="456" alt="getter">
+</p>
 
 ## About
 
@@ -11,7 +13,54 @@ When installed, the script will render the logo next to the web app's own logo
 (that's how you'll know it's working).
 A dedicated button will then be appended to every post, so you can't miss it.
 
-### Changelog
+## FAQ
+
+### Why this?
+
+I questioned myself if I could, then I did it.
+I took some ideas from **siefkenj**'s [repository][1].
+
+## Why not a browser extension?
+
+Tampermonkey is available for many different browsers, so this automatically
+works in every supported browser.
+
+### Who did you make it for?
+
+Me.
+
+### Can I use it?
+
+Sure.
+
+### Can I fork/change it?
+
+Sure, just check the [license][2].
+
+### How do I install/uninstall it?
+
+Install the [Tampermonkey][3] extension in your favorite browser, then either
+click or manually add the bundled `*.user.js` file.
+
+You can uninstall it directly from the Tampermonkey dashboard.
+
+### Can I contribute?
+
+Definitely.
+
+### I found an bug!
+
+Open an issue.
+
+## Contribute
+
+Building is very easy, just execute the command below.
+
+```sh
+npm run build
+```
+
+## Changelog
 
 #### v1.0.0
 
@@ -45,3 +94,7 @@ A dedicated button will then be appended to every post, so you can't miss it.
 #### v0.1
 
 - Initial release
+
+[1]: https://github.com/siefkenj/react-userscripts
+[2]: ./LICENSE
+[3]: https://www.tampermonkey.net/
