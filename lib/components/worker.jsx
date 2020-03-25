@@ -9,8 +9,8 @@ const imgSelectors = [
   'section main article img',
 ]
 const chevronSelectors = [
-  '.coreSpriteRightChevron',
-  '.coreSpriteLeftChevron',
+  'main .coreSpriteRightChevron',
+  'main .coreSpriteLeftChevron',
 ]
 
 const Worker = () => {
