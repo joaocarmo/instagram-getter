@@ -8,9 +8,11 @@
   "scripts": {
     "start": "NODE_ENV=development webpack-dev-server --mode=development --color",
     "test": ">&2 echo \"ERROR: no test(s) specified\" && exit 1",
+    "build-bundle:dev": "NODE_ENV=development webpack --mode=development",
     "build-bundle": "NODE_ENV=production webpack --mode=production",
     "build-meta": "./scripts/setup-meta.js",
     "append-meta": "(cat ./dist/InstagramGetter.meta.js && cat ./dist/InstagramGetter.bundle.js) > ./dist/InstagramGetter.user.js",
+    "build:dev": "npm run build-bundle:dev && npm run build-meta && npm run append-meta",
     "build": "npm run build-bundle && npm run build-meta && npm run append-meta",
     "clean": "rm -rf ./dist"
   },
@@ -58,6 +60,7 @@
     "dotenv-webpack": "^1.7.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.1.0",
+    "eslint-loader": "^3.0.3",
     "eslint-plugin-import": "^2.20.1",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.19.0",

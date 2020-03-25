@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
@@ -36,18 +36,23 @@ const StyledButton = styled.button`
   }
 `
 
-const DownloadButton = ({ imageData: { imageEl, bestSrc } }) => (
+const DownloadButton = ({ imageData: { uuid, imageEl, bestSrc } }) => (
   imageEl && ReactDOM.createPortal(
-    <StyledButton onClick={() => downloadImage(bestSrc)}>Get</StyledButton>,
+    <StyledButton
+      id={`${uuid}-button`}
+      onClick={() => downloadImage(bestSrc)}
+    >
+      Get
+    </StyledButton>,
     imageEl.parentElement,
   )
 )
 
 DownloadButton.propTypes = {
-  imageData: PropTypes.arrayOf(PropTypes.shape({
+  imageData: PropTypes.shape({
     imageEl: PropTypes.instanceOf(Element),
     bestSrc: PropTypes.string,
-  })).isRequired,
+  }).isRequired,
 }
 
 export default DownloadButton

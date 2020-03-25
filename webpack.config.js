@@ -31,10 +31,19 @@ module.exports = {
       {
         test: /.jsx?$/,
         exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: babelConfig,
-        },
+        use: [
+          {
+            loader: 'babel-loader',
+            options: babelConfig,
+          },
+          {
+            loader: 'eslint-loader',
+            options: {
+              cache: true,
+              fix: true,
+            },
+          },
+        ],
       },
       {
         test: /\.svg$/,

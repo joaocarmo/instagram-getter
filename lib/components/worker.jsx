@@ -9,6 +9,8 @@ const imgSelectors = [
   'section main article img',
 ]
 const chevronSelectors = [
+  '[role*=dialog] .coreSpriteRightChevron',
+  '[role*=dialog] .coreSpriteLeftChevron',
   'main .coreSpriteRightChevron',
   'main .coreSpriteLeftChevron',
 ]
@@ -26,8 +28,7 @@ const Worker = () => {
         parsedData = [...parsedData, ...parseData(elements)]
       }
     }
-    const newData = [...data, ...parsedData].filter(uniqueBy('uuid'))
-    setData(newData)
+    setData((oldData) => [...oldData, ...parsedData].filter(uniqueBy('uuid')))
     if (refFindTimer.current) {
       clearInterval(refFindTimer.current)
       refFindTimer.current = null
