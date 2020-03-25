@@ -36,20 +36,12 @@ const StyledButton = styled.button`
   }
 `
 
-const DownloadButton = ({ imageData: { imageEl, bestSrc } }) => {
-  const [parentEl, setParentEl] = useState(null)
-  const [imageUrl, setImageUrl] = useState('')
-
-  useEffect(() => {
-    setParentEl(imageEl.parentElement)
-    setImageUrl(bestSrc)
-  }, [])
-
-  return parentEl && ReactDOM.createPortal(
-    <StyledButton onClick={() => downloadImage(imageUrl)}>Get</StyledButton>,
-    parentEl,
+const DownloadButton = ({ imageData: { imageEl, bestSrc } }) => (
+  imageEl && ReactDOM.createPortal(
+    <StyledButton onClick={() => downloadImage(bestSrc)}>Get</StyledButton>,
+    imageEl.parentElement,
   )
-}
+)
 
 DownloadButton.propTypes = {
   imageData: PropTypes.arrayOf(PropTypes.shape({

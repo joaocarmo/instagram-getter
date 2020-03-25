@@ -1,21 +1,22 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import DownloadButton from './download-button'
 import { parseData, throttle, uniqueBy } from '../utils'
 
-const findInterval = 0.5 // second(s)
+const findInterval = 0.3 // second(s)
 const throttleInterval = 0.2 // second(s)
 const imgSelectors = [
-  '[role*=dialog] img[alt*="Photo by"]',
-  '[role*=dialog] img[alt*="Photo shared by"]',
-  '[role*=dialog] img[alt*="Image may contain"]',
-  'img[alt*="Photo by"]',
-  'img[alt*="Photo shared by"]',
-  'img[alt*="Image may contain"]',
+  '[role*=dialog] img',
+  'section main article img',
+]
+const chevronSelectors = [
+  '.coreSpriteRightChevron',
+  '.coreSpriteLeftChevron',
 ]
 
 const Worker = () => {
   const [data, setData] = useState([])
-  let findTimer = null
+  const [chevronHasEL, setChevronHasEL] = useState({})
+  const refFindTimer = useRef(null)
 
   const crawler = () => {
     let parsedData = []
@@ -27,22 +28,48 @@ const Worker = () => {
     }
     const newData = [...data, ...parsedData].filter(uniqueBy('uuid'))
     setData(newData)
-    if (findTimer) {
-      clearInterval(findTimer)
-      findTimer = null
+    if (refFindTimer.current) {
+      clearInterval(refFindTimer.current)
+      refFindTimer.current = null
+    }
+  }
+
+  const throttledCrawler = throttle(throttleInterval * 1000, crawler)
+
+  const addMultiImgEventListeners = () => {
+    for (const selector of chevronSelectors) {
+      const element = document.querySelector(selector)
+      if (element && !chevronHasEL[selector]) {
+        element.addEventListener('click', throttledCrawler)
+        setChevronHasEL({ ...chevronHasEL, [selector]: true })
+      }
+    }
+  }
+
+  const removeMultiImgEventListeners = () => {
+    for (const selector of chevronSelectors) {
+      const element = document.querySelector(selector)
+      if (element && chevronHasEL[selector]) {
+        element.removeEventListener('click', throttledCrawler)
+        setChevronHasEL({ ...chevronHasEL, [selector]: false })
+      }
     }
   }
 
   useEffect(() => {
-    findTimer = setInterval(crawler, findInterval * 1000)
-    const throttledCrawler = throttle(throttleInterval * 1000, crawler)
+    refFindTimer.current = setInterval(crawler, findInterval * 1000)
     window.addEventListener('scroll', throttledCrawler)
 
     return () => {
-      clearInterval(findTimer)
+      clearInterval(refFindTimer.current)
       window.removeEventListener('scroll', throttledCrawler)
+      removeMultiImgEventListeners()
     }
   }, [])
+
+  useEffect(() => {
+    addMultiImgEventListeners()
+  })
 
   return (
     <>
