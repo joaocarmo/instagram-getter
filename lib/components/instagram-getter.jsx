@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Worker from './worker'
 import Logo from '../img/plus-getter.svg'
+import { debugPrint } from '../utils'
 
 const AppContainer = styled.div`
   z-index: 1000;
@@ -27,8 +28,10 @@ const InstagramGetter = () => {
   const [isHidden, setIsHidden] = useState(false)
 
   const checkIfScrolled = () => {
-    const scrolled = document.querySelector('body').getBoundingClientRect().top
-    setIsHidden(scrolled < -52)
+    const topOffset = document.querySelector('body').getBoundingClientRect().top
+    const hidden = topOffset < -52
+    setIsHidden(hidden)
+    debugPrint(`Logo - ${hidden ? 'hidden' : 'visible'}`)
   }
 
   useEffect(() => {
