@@ -4,7 +4,7 @@
 
 ## About
 
-A Tampermonkey userscript completely written in Readct to provide a button for
+A Tampermonkey userscript completely written in React to provide a button for
 easily getting the post's photographs or videos from the web app.
 
 ## Usage
