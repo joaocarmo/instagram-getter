@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import DownloadButton from './download-button'
 import {
-  parseData, throttle, uniqueBy, addLocationChangeCallback,
+  parseData, throttle, uniqueBy, addLocationChangeCallback, debugPrint,
 } from '../utils'
 
 const findInterval = 0.3 // second(s)
@@ -15,6 +15,7 @@ const imgSelectors = [
 const chevronSelectors = [
   `${dialogSelector} .coreSpriteRightChevron`,
   `${dialogSelector} .coreSpriteLeftChevron`,
+  // `${dialogSelector} .coreSpriteRightPaginationArrow`, Possibly not needed
   'main .coreSpriteRightChevron',
   'main .coreSpriteLeftChevron',
 ]
@@ -33,10 +34,7 @@ const Worker = () => {
       }
     }
     setData((oldData) => [...oldData, ...parsedData].filter(uniqueBy('uuid')))
-    if (refFindTimer.current) {
-      clearInterval(refFindTimer.current)
-      refFindTimer.current = null
-    }
+    debugPrint(`Crawler - ${parsedData.length} parsed elements`)
   }
 
   const throttledCrawler = throttle(throttleInterval * 1000, crawler)
@@ -47,6 +45,7 @@ const Worker = () => {
       if (element && !chevronHasEL[selector]) {
         element.addEventListener('click', throttledCrawler)
         setChevronHasEL({ ...chevronHasEL, [selector]: true })
+        debugPrint(`AddEventListener - ${selector}`)
       }
     }
   }
@@ -57,7 +56,17 @@ const Worker = () => {
       if (element && chevronHasEL[selector]) {
         element.removeEventListener('click', throttledCrawler)
         setChevronHasEL({ ...chevronHasEL, [selector]: false })
+        debugPrint(`RemoveEventListener - ${selector}`)
       }
+    }
+  }
+
+  const findCB = () => {
+    crawler()
+    if (refFindTimer.current) {
+      clearInterval(refFindTimer.current)
+      refFindTimer.current = null
+      debugPrint('FindTimer - Cleared')
     }
   }
 
@@ -68,31 +77,36 @@ const Worker = () => {
       const cbTimer = setInterval(() => {
         counter += 1
         throttledCrawler()
+        debugPrint(`DialogInterval - Run #${counter}`)
         if (counter > 1) {
           clearInterval(cbTimer)
+          debugPrint('DialogInterval - Cleared')
         }
       }, dialogInterval * 1000)
     }
   }
 
   useEffect(() => {
-    refFindTimer.current = setInterval(crawler, findInterval * 1000)
+    refFindTimer.current = setInterval(findCB, findInterval * 1000)
     window.addEventListener('scroll', throttledCrawler)
     if (!window.refDialogObserver) {
-      window.refDialogObserver = addLocationChangeCallback(
-        dialogCB, { runAtInit: false },
-      )
+      const opts = { runAtInit: false }
+      window.refDialogObserver = addLocationChangeCallback(dialogCB, opts)
     }
+
+    debugPrint('Worker mounted')
 
     return () => {
       clearInterval(refFindTimer.current)
       window.removeEventListener('scroll', throttledCrawler)
       removeMultiImgEventListeners()
+      debugPrint('Worker unmounted')
     }
   }, [])
 
   useEffect(() => {
     addMultiImgEventListeners()
+    debugPrint('Worker refreshed')
   })
 
   return (
