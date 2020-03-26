@@ -1,16 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react'
 import DownloadButton from './download-button'
-import { parseData, throttle, uniqueBy } from '../utils'
+import {
+  parseData, throttle, uniqueBy, addLocationChangeCallback,
+} from '../utils'
 
 const findInterval = 0.3 // second(s)
 const throttleInterval = 0.2 // second(s)
+const dialogInterval = 0.5 // second(s)
+const dialogSelector = '[role*=dialog]'
 const imgSelectors = [
-  '[role*=dialog] img',
+  `${dialogSelector} img`,
   'section main article img',
 ]
 const chevronSelectors = [
-  '[role*=dialog] .coreSpriteRightChevron',
-  '[role*=dialog] .coreSpriteLeftChevron',
+  `${dialogSelector} .coreSpriteRightChevron`,
+  `${dialogSelector} .coreSpriteLeftChevron`,
   'main .coreSpriteRightChevron',
   'main .coreSpriteLeftChevron',
 ]
@@ -57,9 +61,28 @@ const Worker = () => {
     }
   }
 
+  const dialogCB = () => {
+    const dialogExists = !!document.querySelector(dialogSelector)
+    if (dialogExists) {
+      let counter = 0
+      const cbTimer = setInterval(() => {
+        counter += 1
+        throttledCrawler()
+        if (counter > 1) {
+          clearInterval(cbTimer)
+        }
+      }, dialogInterval * 1000)
+    }
+  }
+
   useEffect(() => {
     refFindTimer.current = setInterval(crawler, findInterval * 1000)
     window.addEventListener('scroll', throttledCrawler)
+    if (!window.refDialogObserver) {
+      window.refDialogObserver = addLocationChangeCallback(
+        dialogCB, { runAtInit: false },
+      )
+    }
 
     return () => {
       clearInterval(refFindTimer.current)
