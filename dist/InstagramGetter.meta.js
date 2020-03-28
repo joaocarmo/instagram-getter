@@ -6,7 +6,7 @@
 // @source       https://github.com/joaocarmo/instagram-getter
 // @updateURL    https://raw.githubusercontent.com/joaocarmo/instagram-getter/master/dist/InstagramGetter.meta.js
 // @downloadURL  https://raw.githubusercontent.com/joaocarmo/instagram-getter/master/dist/InstagramGetter.user.js
-// @author       Joao Carmo
+// @author       joaocarmo
 // @include      https://www.instagram.com/*
 // @grant        none
 // @run-at       document-idle
