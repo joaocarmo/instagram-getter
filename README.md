@@ -19,7 +19,7 @@ A dedicated button will then be appended to every post, so you can't miss it.
 - Doesn't support profile pictures yet
 - Stops working after browsing back and forth on multiple image posts a couple
 of times
-- May not show until scrolling has occurred and going back to the main profile
+- May not show until scrolling has occurred after going back to the main profile
 page
 - Probably a lot more I haven't noticed yet
 
@@ -73,9 +73,13 @@ npm run build
 
 ## Changelog
 
+### Current
+
 #### v1.0.0
 
 - Complete refactor using React
+
+### Legacy
 
 #### v0.3.0
 
