@@ -2,7 +2,7 @@
   "name": "instagram-getter",
   "publicName": "InstagramGetter",
   "version": "1.0.0",
-  "description": "Instagram post page image getter",
+  "description": "Instagram post image and video getter",
   "browser": "./dist/InstagramGetter.user.js",
   "private": true,
   "scripts": {
@@ -34,7 +34,7 @@
     "browser",
     "extension"
   ],
-  "author": "joaocarmo",
+  "author": "Joao Carmo",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/joaocarmo/instagram-getter/issues"

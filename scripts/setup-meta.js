@@ -4,13 +4,14 @@ const path = require('path')
 const packageConfig = require('../package')
 
 const {
-  author, description, homepage, publicName, version,
+  author, description, homepage, license, publicName, version,
 } = packageConfig
 
 const replacements = [
   ['{{AUTHOR}}', author],
   ['{{DESCRIPTION}}', description],
   ['{{HOMEPAGE}}', homepage],
+  ['{{LICENSE}}', license],
   ['{{NAME}}', publicName],
   ['{{VERSION}}', version],
 ]
