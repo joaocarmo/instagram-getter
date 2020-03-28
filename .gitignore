@@ -2,7 +2,8 @@
 .DS_Store
 
 # Dist dir
-dist
+dist/*.html
+dist/*.bundle.js
 
 # npm modules
 node_modules

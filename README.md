@@ -13,6 +13,16 @@ When installed, the script will render the logo next to the web app's own logo
 (that's how you'll know it's working).
 A dedicated button will then be appended to every post, so you can't miss it.
 
+## Known issues
+
+- Doesn't support videos yet
+- Doesn't support profile pictures yet
+- Stops working after browsing back and forth on multiple image posts a couple
+of times
+- May not show until scrolling has occurred and going back to the main profile
+page
+- Probably a lot more I haven't noticed yet
+
 ## FAQ
 
 #### Why this?

@@ -1,12 +1,12 @@
 // ==UserScript==
-// @name         {{NAME}}
+// @name         InstagramGetter
 // @namespace    http://joaocarmo.com/
-// @version      {{VERSION}}
-// @description  {{DESCRIPTION}}
-// @source       {{HOMEPAGE}}
+// @version      1.0.0
+// @description  Instagram post page image getter
+// @source       https://github.com/joaocarmo/instagram-getter
 // @updateURL    https://raw.githubusercontent.com/joaocarmo/instagram-getter/master/dist/InstagramGetter.meta.js
 // @downloadURL  https://raw.githubusercontent.com/joaocarmo/instagram-getter/master/dist/InstagramGetter.user.js
-// @author       {{AUTHOR}}
+// @author       Joao Carmo
 // @include      https://www.instagram.com/*
 // @grant        none
 // @run-at       document-idle
