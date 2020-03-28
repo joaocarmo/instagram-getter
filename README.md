@@ -1,5 +1,5 @@
 <p align="center">
-	<img src="https://raw.githubusercontent.com/joaocarmo/instagram-getter/refactor/lib/img/getter.svg?sanitize=true" width="456" alt="getter">
+	<img src="https://raw.githubusercontent.com/joaocarmo/instagram-getter/master/lib/img/getter.svg?sanitize=true" width="456" alt="getter">
 </p>
 
 ## About
