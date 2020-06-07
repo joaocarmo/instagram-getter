@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { createPortal } from 'react-dom'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { downloadImage } from '../utils'
@@ -37,10 +37,10 @@ const StyledButton = styled.button`
 `
 
 const DownloadButton = ({ imageData: { uuid, imageEl, bestSrc } }) => (
-  imageEl && ReactDOM.createPortal(
+  imageEl && createPortal(
     <StyledButton
       id={`${uuid}-button`}
-      onClick={() => downloadImage(bestSrc)}
+      onClick={(e) => downloadImage(bestSrc, e)}
     >
       Get
     </StyledButton>,

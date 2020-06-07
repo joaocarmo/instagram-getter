@@ -102,6 +102,7 @@ const Worker = () => {
       removeMultiImgEventListeners()
       debugPrint('Worker unmounted')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {

@@ -68,12 +68,17 @@ Building is very easy, just execute the command below.
 Don't forget to install the dependencies.
 
 ```sh
-npm run build
+yarn build
 ```
 
 ## Changelog
 
 ### Current
+
+#### v1.0.1
+
+- Switched the package manager to _yarn_
+- Switched the framework to _preact_ for a reduced bundled size (~37%)
 
 #### v1.0.0
 

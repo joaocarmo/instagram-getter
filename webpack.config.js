@@ -25,6 +25,11 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.jsx', '.json'],
+    alias: {
+      react: 'preact/compat',
+      'react-dom/test-utils': 'preact/test-utils',
+      'react-dom': 'preact/compat',
+    },
   },
   module: {
     rules: [
@@ -66,12 +71,14 @@ module.exports = {
     new webpack.ProgressPlugin(),
     new Dotenv(),
     new HtmlWebpackPlugin({ title: publicName }),
-    new CopyPlugin([
-      {
-        from: path.join(srcDir, 'template.meta.js'),
-        to: path.join(destDir, `${publicName}.meta.js`),
-      },
-    ]),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: path.join(srcDir, 'template.meta.js'),
+          to: path.join(destDir, `${publicName}.meta.js`),
+        },
+      ],
+    }),
   ],
   devServer: {
     hot: true,

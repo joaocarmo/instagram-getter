@@ -9,5 +9,7 @@ module.exports = {
     ],
     '@babel/preset-react',
   ],
-  plugins: ['babel-plugin-styled-components'],
+  plugins: [
+    'babel-plugin-styled-components',
+  ],
 }
