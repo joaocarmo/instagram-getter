@@ -16,12 +16,13 @@ const replacements = [
   ['{{VERSION}}', version],
 ]
 
+const template = path.join(__dirname, '..', 'lib', 'template.meta.js')
 const fileName = `${publicName}.meta.js`
 const metaFile = path.join(__dirname, '..', 'dist', fileName)
 
 async function main() {
-  if (fs.existsSync(metaFile)) {
-    let fileContents = fs.readFileSync(metaFile, 'utf8')
+  if (fs.existsSync(template)) {
+    let fileContents = fs.readFileSync(template, 'utf8')
     for (const replacement of replacements) {
       const [placeholder, value] = replacement
       fileContents = fileContents.replace(placeholder, value)

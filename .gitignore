@@ -4,6 +4,7 @@
 # Dist dir
 dist/*.html
 dist/*.bundle.js
+dist/*.txt
 
 # npm modules
 node_modules

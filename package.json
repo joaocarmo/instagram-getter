@@ -1,21 +1,22 @@
 {
   "name": "instagram-getter",
   "publicName": "InstagramGetter",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Instagram post image and video getter",
   "browser": "./dist/InstagramGetter.user.js",
   "private": true,
   "scripts": {
-    "lint": "eslint lib/**/*.js lib/**/*.jsx",
-    "start": "NODE_ENV=development webpack-dev-server --mode=development --color",
-    "test": ">&2 echo \"ERROR: no test(s) specified\" && exit 1",
+    "append-meta": "(cat ./dist/InstagramGetter.meta.js && cat ./dist/InstagramGetter.bundle.js) > ./dist/InstagramGetter.user.js",
     "build-bundle:dev": "NODE_ENV=development webpack --mode=development",
     "build-bundle": "NODE_ENV=production webpack --mode=production",
     "build-meta": "./scripts/setup-meta.js",
-    "append-meta": "(cat ./dist/InstagramGetter.meta.js && cat ./dist/InstagramGetter.bundle.js) > ./dist/InstagramGetter.user.js",
-    "build:dev": "npm run build-bundle:dev && npm run build-meta && npm run append-meta",
-    "build": "npm run build-bundle && npm run build-meta && npm run append-meta",
-    "clean": "rm -rf ./dist"
+    "build:dev": "yarn build-bundle:dev && yarn build-meta && yarn append-meta",
+    "build": "yarn build-bundle && yarn build-meta && yarn append-meta",
+    "clean": "rm -rf ./dist/*",
+    "lint": "eslint lib/**/*.js lib/**/*.jsx",
+    "push": "git add . && gitmoji -c",
+    "start": "NODE_ENV=development webpack-dev-server --mode=development --color",
+    "test": ">&2 echo \"ERROR: no test(s) specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -55,9 +56,9 @@
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
     "babel-plugin-styled-components": "^1.10.7",
-    "copy-webpack-plugin": "^6.0.2",
+    "copy-webpack-plugin": "^7.0.0",
     "core-js": "^3.6.4",
-    "dotenv-webpack": "^1.7.0",
+    "dotenv-webpack": "^6.0.0",
     "eslint": "^7.2.0",
     "eslint-config-airbnb": "^18.1.0",
     "eslint-import-resolver-alias": "^1.1.2",
@@ -69,8 +70,8 @@
     "eslint-plugin-react-hooks": "^4.0.4",
     "html-webpack-plugin": "^4.0.2",
     "react-svg-loader": "^3.0.3",
-    "webpack": "^4.42.1",
-    "webpack-cli": "^3.3.11",
+    "webpack": "^5.10.0",
+    "webpack-cli": "^4.2.0",
     "webpack-dev-server": "^3.10.3"
   },
   "browserslist": {

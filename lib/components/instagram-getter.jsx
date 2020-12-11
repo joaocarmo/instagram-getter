@@ -4,6 +4,8 @@ import Worker from './worker'
 import Logo from '../img/plus-getter.svg'
 import { debugPrint } from '../utils'
 
+const distanceFromLogo = '125px'
+
 const AppContainer = styled.div`
   z-index: 1000;
 
@@ -16,11 +18,11 @@ const AppLogoContainer = styled.div`
   opacity: ${({ isHidden }) => (isHidden ? 0 : 1)};
   position: fixed;
   top: ${({ isHidden }) => (isHidden ? '15px' : '20px')};
-  left: calc(50vw - 975px / 2 + 175px);
+  left: calc(50vw - 975px / 2 + ${distanceFromLogo});
   transition: all 0.2s ease-in 0.05s;
 
   @media (max-width: 1000px) {
-    left: 175px;
+    left: ${distanceFromLogo};
   }
 `
 
