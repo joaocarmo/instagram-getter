@@ -4,7 +4,7 @@ const Dotenv = require('dotenv-webpack')
 const CopyPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const babelConfig = require('./babel.config')
-const packageConfig = require('./package')
+const packageConfig = require('./package.json')
 
 const { env: { NODE_ENV } } = process
 const mode = NODE_ENV || 'development'

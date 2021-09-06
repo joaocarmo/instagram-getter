@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
@@ -36,20 +36,29 @@ const StyledButton = styled.button`
   }
 `
 
-const DownloadButton = ({ imageData: { uuid, imageEl, bestSrc } }) => (
-  imageEl && createPortal(
-    <StyledButton
-      id={`${uuid}-button`}
-      onClick={(e) => downloadImage(bestSrc, e)}
-    >
-      Get
-    </StyledButton>,
-    imageEl.parentElement,
+const DownloadButton = ({ imageData: { uuid, imageEl, bestSrc } }) => {
+  const handleOnClick = useCallback((e) => downloadImage(e, bestSrc), [bestSrc])
+
+  if (!imageEl?.parentElement) {
+    return null
+  }
+
+  return (
+    imageEl && createPortal(
+      <StyledButton
+        id={`${uuid}-button`}
+        onClick={handleOnClick}
+      >
+        Get
+      </StyledButton>,
+      imageEl.parentElement,
+    )
   )
-)
+}
 
 DownloadButton.propTypes = {
   imageData: PropTypes.shape({
+    uuid: PropTypes.string,
     imageEl: PropTypes.instanceOf(Element),
     bestSrc: PropTypes.string,
   }).isRequired,

@@ -5,14 +5,14 @@ import {
   debugPrint, addLocationChangeCallback, awaitElement, shouldDisable,
 } from './utils'
 
-if (!shouldDisable()) {
-  const main = async () => {
-    const appEl = await awaitElement(process.env.ROOT_ELEMENT)
-    const container = document.createElement('div')
-    appEl.appendChild(container)
-    render(<InstagramGetter />, container)
-  }
+const main = async () => {
+  const appEl = await awaitElement(process.env.ROOT_ELEMENT)
+  const container = document.createElement('div')
+  appEl.appendChild(container)
+  render(<InstagramGetter />, container)
+}
 
+if (!shouldDisable()) {
   addLocationChangeCallback(() => {
     main().catch(debugPrint)
   })

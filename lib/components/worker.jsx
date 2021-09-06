@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, {
+  useCallback, useEffect, useRef, useState,
+} from 'react'
 import DownloadButton from './download-button'
 import {
   parseData, throttle, uniqueBy, addLocationChangeCallback, debugPrint,
@@ -25,7 +27,7 @@ const Worker = () => {
   const [chevronHasEL, setChevronHasEL] = useState({})
   const refFindTimer = useRef(null)
 
-  const crawler = () => {
+  const crawler = useCallback(() => {
     let parsedData = []
     for (const selector of imgSelectors) {
       const elements = document.querySelectorAll(selector)
@@ -35,11 +37,11 @@ const Worker = () => {
     }
     setData((oldData) => [...oldData, ...parsedData].filter(uniqueBy('uuid')))
     debugPrint(`Crawler - ${parsedData.length} parsed elements`)
-  }
+  }, [])
 
-  const throttledCrawler = throttle(throttleInterval * 1000, crawler)
+  const throttledCrawler = useCallback(() => throttle(throttleInterval * 1000, crawler), [crawler])
 
-  const addMultiImgEventListeners = () => {
+  const addMultiImgEventListeners = useCallback(() => {
     for (const selector of chevronSelectors) {
       const element = document.querySelector(selector)
       if (element && !chevronHasEL[selector]) {
@@ -48,9 +50,9 @@ const Worker = () => {
         debugPrint(`AddEventListener - ${selector}`)
       }
     }
-  }
+  }, [chevronHasEL, throttledCrawler])
 
-  const removeMultiImgEventListeners = () => {
+  const removeMultiImgEventListeners = useCallback(() => {
     for (const selector of chevronSelectors) {
       const element = document.querySelector(selector)
       if (element && chevronHasEL[selector]) {
@@ -59,19 +61,19 @@ const Worker = () => {
         debugPrint(`RemoveEventListener - ${selector}`)
       }
     }
-  }
+  }, [chevronHasEL, throttledCrawler])
 
-  const findCB = () => {
+  const findCB = useCallback(() => {
     crawler()
     if (refFindTimer.current) {
       clearInterval(refFindTimer.current)
       refFindTimer.current = null
       debugPrint('FindTimer - Cleared')
     }
-  }
+  }, [crawler])
 
-  const dialogCB = () => {
-    const dialogExists = !!document.querySelector(dialogSelector)
+  const dialogCB = useCallback(() => {
+    const dialogExists = document.querySelector(dialogSelector)
     if (dialogExists) {
       let counter = 0
       const cbTimer = setInterval(() => {
@@ -84,7 +86,7 @@ const Worker = () => {
         }
       }, dialogInterval * 1000)
     }
-  }
+  }, [throttledCrawler])
 
   useEffect(() => {
     refFindTimer.current = setInterval(findCB, findInterval * 1000)
@@ -108,17 +110,15 @@ const Worker = () => {
   useEffect(() => {
     addMultiImgEventListeners()
     debugPrint('Worker refreshed')
-  })
+  }, [addMultiImgEventListeners])
 
-  return (
-    <>
-      {data && data.length > 0 && (
-        data.map((imageData) => (
-          <DownloadButton key={imageData.uuid} imageData={imageData} />
-        ))
-      )}
-    </>
-  )
+  if (!data || !data.length) {
+    return null
+  }
+
+  return data.map((imageData) => (
+    <DownloadButton key={imageData.uuid} imageData={imageData} />
+  ))
 }
 
 export default Worker
