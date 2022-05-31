@@ -41,13 +41,6 @@ module.exports = {
             loader: 'babel-loader',
             options: babelConfig,
           },
-          {
-            loader: 'eslint-loader',
-            options: {
-              cache: true,
-              fix: true,
-            },
-          },
         ],
       },
       {
@@ -83,8 +76,6 @@ module.exports = {
   devServer: {
     hot: true,
     open: true,
-    overlay: true,
-    noInfo: true,
     port: 3000,
   },
 }

@@ -26,18 +26,20 @@ const StyledButton = styled.button`
     opacity: 1;
     background-image: linear-gradient(
       transparent,
-      rgba(0,0,0,.05) 40%,
-      rgba(0,0,0,.1)
+      rgba(0, 0, 0, 0.05) 40%,
+      rgba(0, 0, 0, 0.1)
     );
   }
 
   &:active {
-    box-shadow: 0 0 0 1px rgba(0,0,0,.15) inset, 0 0 6px rgba(0,0,0,.2) inset;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15) inset,
+      0 0 6px rgba(0, 0, 0, 0.2) inset;
   }
 `
 
-const DownloadButton = ({ imageData: { uuid, imageEl, bestSrc } }) => (
-  imageEl && createPortal(
+const DownloadButton = ({ imageData: { uuid, imageEl, bestSrc } }) =>
+  imageEl &&
+  createPortal(
     <StyledButton
       id={`${uuid}-button`}
       onClick={(e) => downloadImage(bestSrc, e)}
@@ -46,7 +48,6 @@ const DownloadButton = ({ imageData: { uuid, imageEl, bestSrc } }) => (
     </StyledButton>,
     imageEl.parentElement,
   )
-)
 
 DownloadButton.propTypes = {
   imageData: PropTypes.shape({

@@ -2,7 +2,10 @@ import React from 'react'
 import { render } from 'react-dom'
 import InstagramGetter from './components/instagram-getter'
 import {
-  debugPrint, addLocationChangeCallback, awaitElement, shouldDisable,
+  debugPrint,
+  addLocationChangeCallback,
+  awaitElement,
+  shouldDisable,
 } from './utils'
 
 if (!shouldDisable()) {

@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react'
 import DownloadButton from './download-button'
 import {
-  parseData, throttle, uniqueBy, addLocationChangeCallback, debugPrint,
+  parseData,
+  throttle,
+  uniqueBy,
+  addLocationChangeCallback,
+  debugPrint,
 } from '../utils'
 
 const findInterval = 0.3 // second(s)
 const throttleInterval = 0.2 // second(s)
 const dialogInterval = 0.5 // second(s)
 const dialogSelector = '[role*=dialog]'
-const imgSelectors = [
-  `${dialogSelector} img`,
-  'section main article img',
-]
+const imgSelectors = [`${dialogSelector} img`, 'section main article img']
 const chevronSelectors = [
   `${dialogSelector} .coreSpriteRightChevron`,
   `${dialogSelector} .coreSpriteLeftChevron`,
@@ -20,6 +21,10 @@ const chevronSelectors = [
   'main .coreSpriteLeftChevron',
 ]
 
+/**
+ * The worker component is responsible for the heavy lifting of the extension.
+ * @returns {ReactNode}
+ */
 const Worker = () => {
   const [data, setData] = useState([])
   const [chevronHasEL, setChevronHasEL] = useState({})
@@ -110,15 +115,13 @@ const Worker = () => {
     debugPrint('Worker refreshed')
   })
 
-  return (
-    <>
-      {data && data.length > 0 && (
-        data.map((imageData) => (
-          <DownloadButton key={imageData.uuid} imageData={imageData} />
-        ))
-      )}
-    </>
-  )
+  if (!data?.length) {
+    return null
+  }
+
+  return data.map((imageData) => (
+    <DownloadButton key={imageData.uuid} imageData={imageData} />
+  ))
 }
 
 export default Worker
